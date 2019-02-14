@@ -33,7 +33,11 @@ const renderTodoListStorage = () => {
         h('input', {
             type: 'text',
             placeholder: 'What to do?',
-            onkeydown: `if (event.keyCode === 13) { alert(42); todoListStorage.push(event.target.value); renderTodoListStorage();}`,
+            onkeydown: `
+                if (event.keyCode === 13) {
+                    todoListStorage.push(event.target.value);
+                    renderTodoListStorage();
+                }`,
         }, []),
         h('ul', null, todoListStorage.map(text => h('li', null, [text]))),
     ]);

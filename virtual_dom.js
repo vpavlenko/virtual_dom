@@ -37,10 +37,12 @@ const patch = (newVirtualNode, oldVirtualNode, parent) => {
   } else if (!newVirtualNode) {
     parent.removeChild(oldVirtualNode._realNode);
   } else if (typeof newVirtualNode !== typeof oldVirtualNode ||
-      oldVirtualNode.isTextNode ||
+      oldVirtualNode.isTextNode && oldVirtualNode.text !== newVirtualNode.text ||
       newVirtualNode.type !== oldVirtualNode.type) {
     parent.replaceChild(mount(newVirtualNode), oldVirtualNode._realNode);
-  } else {
+  } else if (!oldVirtualNode.isTextNode) {
+    console.log('Reconciliation: preserving', oldVirtualNode);
+    newVirtualNode._realNode = oldVirtualNode._realNode;
     const realNode = oldVirtualNode._realNode;
     for (const key in newVirtualNode.props) {
       if (newVirtualNode.props[key] !== oldVirtualNode.props[key]) {
