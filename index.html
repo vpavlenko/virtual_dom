@@ -9,7 +9,7 @@ const virtualNode = h('div', null, ['Hello world once again']);
 
 document.body.appendChild(mount(virtualNode));
 
-setTimeout(
-    patch(virtualNode, h('div', null, ['Hello world change in 2 seconds']), document.body)
-, 2000);
+setTimeout(() => {
+    patch(h('div', null, ['Hello world change in 2 seconds']), virtualNode, document.body)
+}, 2000);
 </script>

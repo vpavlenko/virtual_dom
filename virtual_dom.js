@@ -4,15 +4,15 @@ const h = (type, props, children) => {
   return {
     type,
     props,
-    children,  // always an array
+    children: children.map(child => typeof child === "string" ? {isTextNode: true, text: child} : child),
   };
 };
 
 const mount = (virtualNode) => {
-  debugger;
-  // When a child is a string
-  if (typeof virtualNode === "string") {
-    return document.createTextNode(virtualNode);
+  if (virtualNode.isTextNode) {
+    const realNode = document.createTextNode(virtualNode.text);
+    virtualNode._realNode = realNode;
+    return realNode;
   }
   const { type, props, children } = virtualNode;
   const realNode = document.createElement(type);
@@ -29,7 +29,6 @@ const mount = (virtualNode) => {
 };
 
 const patch = (newVirtualNode, oldVirtualNode, parent) => {
-  debugger;
   if (oldVirtualNode === newVirtualNode) {
     return;
   }
@@ -37,12 +36,12 @@ const patch = (newVirtualNode, oldVirtualNode, parent) => {
     parent.appendChild(mount(newVirtualNode));
   } else if (!newVirtualNode) {
     parent.removeChild(oldVirtualNode._realNode);
+  } else if (typeof newVirtualNode !== typeof oldVirtualNode ||
+      oldVirtualNode.isTextNode ||
+      newVirtualNode.type !== oldVirtualNode.type) {
+    parent.replaceChild(mount(newVirtualNode), oldVirtualNode._realNode);
   } else {
-    if ()
     const realNode = oldVirtualNode._realNode;
-    if (newVirtualNode.type !== oldVirtualNode.type) {
-      parent.replaceChild(realNode, mount(newVirtualNode));
-    }
     for (const key in newVirtualNode.props) {
       if (newVirtualNode.props[key] !== oldVirtualNode.props[key]) {
         realNode.setAttribute(key, newVirtualNode.props[key]);
