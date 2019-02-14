@@ -1,13 +1,17 @@
 <script src="virtual_dom.js"></script>
 
-<script>
-const mountPoint = document.querySelector("#mount-point");
+<div id="mount-point" />
 
-class Hello extends VirtualDOMComponent {
+<script>
+class Hello extends VirtualDOM.Component {
     render() {
-        return VirtualDOM.createElement('div', 'Hello world');
+        return VirtualDOM.createElement('div', null, 'Hello world');
     }
 }
-</script>
 
-<div id="mount-point" />
+VirtualDOM.render(
+    // VirtualDOM.createElement(Hello),
+    VirtualDOM.createElement('div', null, 'Hello world'),
+    document.getElementById("mount-point")
+);
+</script>
