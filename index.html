@@ -1,15 +1,50 @@
 <script src="virtual_dom.js"></script>
 
-<body></body>
+<body>
+    <h1>Example 1: patch() after setTimeout()</h1>
+    <div id="example-1"></div>
+
+    <h1>Example 2: todo list</h1>
+    <div id="example-2"></div>
+</body>
 
 <script>
 const { h, mount, patch } = window.VirtualDOM;
 
 const virtualNode = h('div', null, ['Hello world once again']);
 
-document.body.appendChild(mount(virtualNode));
+const example1 = document.getElementById('example-1');
+
+example1.appendChild(mount(virtualNode));
 
 setTimeout(() => {
-    patch(h('div', null, ['Hello world change in 2 seconds']), virtualNode, document.body)
+    patch(h('div', null, ['Hello world change in 2 seconds']), virtualNode, example1)
 }, 2000);
+
+
+
+const example2 = document.getElementById('example-2');
+
+const todoListStorage = ['Start Up', 'Cash In', 'Sell Out', 'Bro Down'];
+
+let virtualNode2 = null;
+const renderTodoListStorage = () => {
+    const todoList = h('div', null, [
+        h('input', {
+            type: 'text',
+            placeholder: 'What to do?',
+            onkeydown: `if (event.keyCode === 13) { alert(42); todoListStorage.push(event.target.value); renderTodoListStorage();}`,
+        }, []),
+        h('ul', null, todoListStorage.map(text => h('li', null, [text]))),
+    ]);
+
+    if (virtualNode2) {
+        patch(todoList, virtualNode2, example2);
+    } else {
+        example2.appendChild(mount(todoList));
+    }
+    virtualNode2 = todoList;
+};
+
+renderTodoListStorage();
 </script>
