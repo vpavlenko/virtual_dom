@@ -1,17 +1,15 @@
 <script src="virtual_dom.js"></script>
 
-<div id="mount-point" />
+<body></body>
 
 <script>
-class Hello extends VirtualDOM.Component {
-    render() {
-        return VirtualDOM.createElement('div', null, 'Hello world');
-    }
-}
+const { h, mount, patch } = window.VirtualDOM;
 
-VirtualDOM.render(
-    // VirtualDOM.createElement(Hello),
-    VirtualDOM.createElement('div', null, 'Hello world'),
-    document.getElementById("mount-point")
-);
+const virtualNode = h('div', null, ['Hello world once again']);
+
+document.body.appendChild(mount(virtualNode));
+
+setTimeout(
+    patch(virtualNode, h('div', null, ['Hello world change in 2 seconds']), document.body)
+, 2000);
 </script>
